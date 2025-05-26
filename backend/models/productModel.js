@@ -39,5 +39,5 @@ date:{
 }
 })
 
-const productModel= mongoose.models.product||('products', productSchema);
+const productModel= mongoose.models.product||mongoose.model('products', productSchema);
 export default productModel;
