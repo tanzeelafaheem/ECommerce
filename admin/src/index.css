@@ -1,0 +1,13 @@
+@import "tailwindcss";
+*{
+    font-family: cursive;
+}
+select, input, textarea {
+  border: 1px solid #c2c2c2;
+  outline-color:  #f1a4ca ;
+  border-radius: 4px
+}
+.active {
+background-color: #f1a4ca;
+ border-color:#C586A5;
+}
