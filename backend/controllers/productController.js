@@ -1,43 +1,51 @@
-import productModel from '../models/productModel.js'
-import cloudinary from '../config/cloudinary.js';
+import productModel from '../models/productModel.js';
+import cloudinary from 'cloudinary';
+import upload from '../middleware/multer.js';
+
 // To add product
 const addProduct = async (req, res) => {
     try {
         const { name, description, price, category, subCategory, sizes, bestSeller } = req.body;
-        const image1 = Array.isArray(req.files.image1) ? req.files.image1[0] : req.files.image1;
-        const image2 = Array.isArray(req.files.image2) ? req.files.image2[0] : req.files.image2;
-        const image3 = Array.isArray(req.files.image3) ? req.files.image3[0] : req.files.image3;
-        const image4 = Array.isArray(req.files.image4) ? req.files.image4[0] : req.files.image4;
 
-        const images=[image1, image2, image3, image4].filter((item)=>item!==undefined)
-        let imagesUrl = await Promise.all(
+        const image1 = req.files?.image1?.[0] || null;
+        const image2 = req.files?.image2?.[0] || null;
+        const image3 = req.files?.image3?.[0] || null;
+        const image4 = req.files?.image4?.[0] || null;
+
+        // Filter out null or undefined images
+        const images = [image1, image2, image3, image4].filter((item) => item !== null && item !== undefined);
+
+        // Upload to Cloudinary
+        const imagesUrl = await Promise.all(
             images.map(async (item) => {
-                let result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
+                const result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
                 return result.secure_url;
             })
-        ) 
-        // console.log(name, description, price, category, subcategory, sizes, bestSeller);
-        // console.log(images);
-        const productData={
+        );
+
+        const productData = {
             name,
             description,
-            price:Number(price),
+            price: Number(price),
             category,
             subCategory,
-            sizes:JSON.parse(sizes),
-            bestSeller:bestSeller === 'true' ? true : false,
+            sizes: JSON.parse(sizes),
+            bestSeller: bestSeller === 'true',
             image: imagesUrl,
-            date:Date.now()   
-        }
-        console.log(productData);
+            date: Date.now(),
+        };
+
         const product = new productModel(productData);
-        await product.save(); 
-        res.json({ success: true,message: 'Product added successfully'});
+        await product.save();
+
+        res.json({ success: true, message: 'Product added successfully' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+export default addProduct;
 
 // List products
 const listProducts = async (req, res) => {

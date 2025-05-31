@@ -1,10 +1,13 @@
 import multer from 'multer';
 
 const storage = multer.diskStorage({
-    filename:function(req, file, cb) {
-        cb(null, file.originalname);
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/'); // Ensure this folder exists
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
     }
-})
+});
 
 const upload = multer({storage})
 

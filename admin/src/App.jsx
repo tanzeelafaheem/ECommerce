@@ -20,7 +20,7 @@ const App = () => {
    },[token]);
   return (
     <div className='bg-gray-50 min-h-screen '>
-    <ToastContainer/>     
+    <ToastContainer/>    
     {token===""?<Login setToken={setToken}/>:
      <>
    <Navbar setToken={setToken}/>
