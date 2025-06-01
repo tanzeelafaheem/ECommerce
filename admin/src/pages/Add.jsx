@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { assets } from "../assets/admin_assets/assets";
 import axios from "axios";
 import { backendUrl } from "../App";
+import { toast } from "react-toastify";
 
 const Add = ({ token }) => {
   // State for images
@@ -53,10 +54,25 @@ const Add = ({ token }) => {
           headers: { token, "Content-Type": "multipart/form-data" },
         }
       );
-
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error adding product:", error);
+    if(response.data.success) {
+       toast.success("Product added successfully!");
+        // Reset form fields
+        setName("");
+        setDescription("");
+        setPrice("");
+        setCategory("");
+        setImage1(false);
+        setImage2(false); 
+        setImage3(false);
+        setImage4(false);
+        setSizes([]);
+        setBestSeller(false);
+    } else {
+        toast.error(response.data.message || "Failed to add product");
+    }}
+    catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message || "Something went wrong!");
     }
   };
 
