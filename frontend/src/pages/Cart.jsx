@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
-import { assets, products } from "../assets/frontend_assets/assets";
+import { assets} from "../assets/frontend_assets/assets";
 import CartTotal from "../components/CartTotal";
 
 const Cart = () => {
-  const { product, currency, cartItems,updateQuantity,navigate } = useContext(ShopContext);
+  const { products, currency, cartItems,updateQuantity,navigate } = useContext(ShopContext);
 
   const [cartData, setCartData] = useState([]);
   useEffect(() => {
@@ -34,6 +34,7 @@ const Cart = () => {
             const productData = products.find(
               (product) => product._id === item._id
             );
+            
             return (
               <div
                 key={index}
